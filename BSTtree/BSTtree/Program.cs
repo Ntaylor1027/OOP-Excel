@@ -6,23 +6,74 @@ using System.Threading.Tasks;
 
 namespace BSTtree
 {
-    public class BSTNode
+    public class BSTNode<T> where T: IComparable<T>
     {
 
-        public BSTNode(int val)
+        public BSTNode(T val)
         {
             this.Value = val;
-            this.LeftNode = null;
-            this.RightNode = null;
         }
 
-        public int Value    { get; private set; }
-        public BSTNode LeftNode { get; set; }
-        public BSTNode RightNode { get; set; }
+        public int CompareTo(BSTNode<T> obj)
+        {
+            if (object.ReferenceEquals(obj, null))
+            {
+                return -1;
+            }
+            return Value.CompareTo(obj.Value);
+        }
+
+        public static bool operator ==(BSTNode<T> n1, BSTNode<T> n2)
+        {
+            return n1.Value.Equals(n2.Value);
+        }
+
+        public static bool operator !=(BSTNode<T> n1, BSTNode<T> n2)
+        {
+            return !(n1.Value.Equals(n2.Value));
+        }
+
+        public static bool operator <=(BSTNode<T> n1, BSTNode<T> n2)
+        {
+            return n1.Value.CompareTo(n2.Value) <= 0;
+        }
+
+        public static bool operator >=(BSTNode<T> n1, BSTNode<T> n2)
+        {
+            return n1.Value.CompareTo(n2.Value) >= 0;
+        }
+
+        public static bool operator >(BSTNode<T> n1, BSTNode<T> n2)
+        {
+            return n1.Value.CompareTo(n2.Value) == 1;
+        }
+        public static bool operator <(BSTNode<T> n1, BSTNode<T> n2)
+        {
+            return n1.Value.CompareTo(n2.Value) == -1;
+        }
+
+
+
+        public T Value    { get; private set; }
+        public BSTNode<T> LeftNode { get; set; }
+        public BSTNode<T> RightNode { get; set; }
     }
 
-    public class BSTtree
+    public abstract class BinTree<T> where T: IComparable<T>
     {
+        public abstract void Insert(T val); // Insert new item of type T
+        public abstract bool Contains(T val); // Returns true if item is in tree
+        public abstract void InOrder(); // Print elements in tree inorder traversal
+        public abstract void PreOrder();
+        public abstract void PostOrder();
+    }
+    
+    public class BSTtree<T> : BinTree<T> where T : IComparable<T>
+    {
+        public BSTNode<T> HeadNode { get; set; }
+        public int NumItems { get; set; }
+        public int Depth { get; set; }
+
         public BSTtree()
         {
             this.Depth = 0;
@@ -30,31 +81,54 @@ namespace BSTtree
             this.HeadNode = null;
         }
 
-        public bool insert(int nodeVal)
+        public override bool Contains(T val)
         {
+            bool found = false;
+            BSTNode<T> temp = HeadNode;
+            BSTNode<T> checkNode = new BSTNode<T>(val);
 
-            bool success = false;
-
-            if (HeadNode == null)
+            while(temp is null == false)
             {
-                BSTNode newNode = new BSTNode(nodeVal);
+                if(temp == checkNode)
+                {
+                    found = true;
+                    break;
+                }
+                else if(checkNode < temp)
+                {
+                    temp = temp.LeftNode;
+                }
+                else // bigger than
+                {
+                    temp = temp.RightNode;
+                }
+
+            }
+            return found;
+        }
+
+        public override void Insert(T nodeVal)
+        {
+            bool success = false;
+            BSTNode<T> newNode = new BSTNode<T>(nodeVal);
+            if (HeadNode is null)
+            {
                 HeadNode = newNode;
                 Depth = 1;
                 success = true;
             }
-            else 
+            else
             {
-                BSTNode current = HeadNode;
+                BSTNode<T> current = HeadNode;
                 bool keep_going = true;
                 int local_depth = 1;
                 while (keep_going)
                 {
                     local_depth += 1;
-                    if (nodeVal > current.Value)
+                    if (newNode > current)
                     {
-                        if(current.RightNode == null)
+                        if (current.RightNode is null)
                         {
-                            BSTNode newNode = new BSTNode(nodeVal);
                             current.RightNode = newNode;
                             success = true;
                             keep_going = false;
@@ -64,11 +138,10 @@ namespace BSTtree
                             current = current.RightNode;
                         }
                     }
-                    else if(nodeVal < current.Value)
+                    else if (newNode < current)
                     {
-                        if (current.LeftNode == null)
+                        if (current.LeftNode is null)
                         {
-                            BSTNode newNode = new BSTNode(nodeVal);
                             current.LeftNode = newNode;
                             success = true;
                             keep_going = false;
@@ -89,63 +162,62 @@ namespace BSTtree
             {
                 NumItems += 1;
             }
-            return success;
+            
         }
 
-        public bool search(int val)
+        public override void InOrder()
         {
-            bool success = search(this.HeadNode, val);
-            return success;
+            printInOrder(HeadNode);
         }
 
-        private bool search(BSTNode root, int val)
+        private void printInOrder(BSTNode<T> head)
         {
-            bool success = false;
-            if (root == null)
+            if (head is null == false)
             {
-                success = false;
-                return success;
-            }
-            else if (root.Value == val)
-            {
-                success = true;
-                return success;
-            }
-            else if (val > root.Value)
-            {
-                success = search(root.RightNode, val);
-            }
-            else if (val < root.Value)
-            {
-                success = search(root.LeftNode, val);
-            }
-            return success;
-        }
-
-        public void print()
-        {
-            print(this.HeadNode);
-        }
-
-        private void print(BSTNode head)
-        {
-            if(head != null)
-            {
-                print(head.LeftNode);
+                printInOrder(head.LeftNode);
                 string value = Convert.ToString(head.Value);
                 Console.Write(value + " ");
-                print(head.RightNode);
+                printInOrder(head.RightNode);
+            }
+        }
+
+        public override void PreOrder()
+        {
+            printPreOrder(HeadNode);
+        }
+
+        private void printPreOrder(BSTNode<T> head)
+        {
+            if (head is null == false)
+            {
+                string value = Convert.ToString(head.Value);
+                Console.Write(value + " ");
+                printPreOrder(head.LeftNode);
+                printPreOrder(head.RightNode);
+            }
+        }
+
+        public override void PostOrder()
+        {
+            printPostOrder(HeadNode);
+        }
+
+        private void printPostOrder(BSTNode<T> head)
+        {
+            if (head is null == false)
+            {
+                printPostOrder(head.LeftNode);
+                printPostOrder(head.RightNode);
+                string value = Convert.ToString(head.Value);
+                Console.Write(value + " "); 
             }
         }
 
         public int theoreticalMin()
         {
-            return (int)(Math.Log(NumItems,2))+1;
+            return (int)(Math.Log(NumItems, 2)) + 1;
         }
 
-        public BSTNode HeadNode { get; private set; }
-        public int NumItems { get; private set; }
-        public int Depth { get; private set; }
     }
 
     class Program
@@ -153,28 +225,31 @@ namespace BSTtree
 
         static void Main(string[] args)
         {
-            
-            BSTtree tree = new BSTtree();
-            
-            Console.WriteLine("Please enter a string of integers from 0-100 seperated by spaces:\n");
-            string input_string = Console.ReadLine();
-            string[] input_values = input_string.Split(' ');
-            foreach(string val in input_values){
-                if (!tree.search(Int32.Parse(val)))
-                {
-                    tree.insert(Int32.Parse(val));
+                  
+                BSTtree<int> tree = new BSTtree<int>();
+
+                Console.WriteLine("Please enter a string of integers from 0-100 seperated by spaces:\n");
+                string input_string = Console.ReadLine();
+                string[] input_values = input_string.Split(' ');
+                foreach(string val in input_values){
+                    if (!tree.Contains(Int32.Parse(val)))
+                    {
+                        tree.Insert(Int32.Parse(val));
+                    }
                 }
-            }
-            Console.Write("Tree Contents: ");
-            tree.print();
-            Console.WriteLine("\nTree Statistics: ");
-            Console.WriteLine(" Number of Nodes: "+ tree.NumItems);
-            Console.WriteLine(" Number of Levels: "+ tree.Depth);
-            Console.WriteLine(" Minimum number of levels that a tree with " + tree.NumItems + "nodes coulde have = "+ tree.theoreticalMin());
-            Console.WriteLine("Done");
+                Console.Write("Tree Contents: ");
+                tree.InOrder();
+                Console.WriteLine("\nTree Statistics: ");
+                Console.WriteLine(" Number of Nodes: "+ tree.NumItems);
+                Console.WriteLine(" Number of Levels: "+ tree.Depth);
+                Console.WriteLine(" Minimum number of levels that a tree with " + tree.NumItems + "nodes coulde have = "+ tree.theoreticalMin());
+                Console.WriteLine("Done");
+
+
+                Console.ReadKey();
             
             
-            Console.ReadKey();
+            
         }
     }
 }
