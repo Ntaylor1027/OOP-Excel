@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spreedsheet", "Spreedsheet.csproj", "{51EE9AB4-FAB5-46ED-9221-F17F675DB462}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpreedsheetEngine", "..\SpreedsheetEngine\SpreedsheetEngine.csproj", "{D3111D40-EFFE-4B0E-B202-52DC8756DDFD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpreadSheetEngine", "..\SpreedsheetEngine\SpreadSheetEngine.csproj", "{D3111D40-EFFE-4B0E-B202-52DC8756DDFD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
