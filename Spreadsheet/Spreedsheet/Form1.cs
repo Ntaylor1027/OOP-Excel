@@ -19,31 +19,37 @@ namespace Spreedsheet
             //dataGridView1.ColumnHeadersVisible = true;
             //dataGridView1.Columns[0].Name = ("A");
             dataGridView1.Columns.Add("columnA", "A");
-            dataGridView1.Columns.Add("columnA", "B");
-            dataGridView1.Columns.Add("columnA", "C");
-            dataGridView1.Columns.Add("columnA", "D");
-            dataGridView1.Columns.Add("columnA", "E");
-            dataGridView1.Columns.Add("columnA", "F");
-            dataGridView1.Columns.Add("columnA", "G");
-            dataGridView1.Columns.Add("columnA", "H");
-            dataGridView1.Columns.Add("columnA", "I");
-            dataGridView1.Columns.Add("columnA", "J");
-            dataGridView1.Columns.Add("columnA", "K");
-            dataGridView1.Columns.Add("columnA", "L");
-            dataGridView1.Columns.Add("columnA", "M");
-            dataGridView1.Columns.Add("columnA", "N");
-            dataGridView1.Columns.Add("columnA", "O");
-            dataGridView1.Columns.Add("columnA", "P");
-            dataGridView1.Columns.Add("columnA", "Q");
-            dataGridView1.Columns.Add("columnA", "R");
-            dataGridView1.Columns.Add("columnA", "S");
-            dataGridView1.Columns.Add("columnA", "T");
-            dataGridView1.Columns.Add("columnA", "U");
-            dataGridView1.Columns.Add("columnA", "V");
-            dataGridView1.Columns.Add("columnA", "W");
-            dataGridView1.Columns.Add("columnA", "X");
-            dataGridView1.Columns.Add("columnA", "Y");
-            dataGridView1.Columns.Add("columnA", "Z");
+            dataGridView1.Columns.Add("columnB", "B");
+            dataGridView1.Columns.Add("columnC", "C");
+            dataGridView1.Columns.Add("columnD", "D");
+            dataGridView1.Columns.Add("columnE", "E");
+            dataGridView1.Columns.Add("columnF", "F");
+            dataGridView1.Columns.Add("columnG", "G");
+            dataGridView1.Columns.Add("columnH", "H");
+            dataGridView1.Columns.Add("columnI", "I");
+            dataGridView1.Columns.Add("columnJ", "J");
+            dataGridView1.Columns.Add("columnK", "K");
+            dataGridView1.Columns.Add("columnL", "L");
+            dataGridView1.Columns.Add("columnM", "M");
+            dataGridView1.Columns.Add("columnN", "N");
+            dataGridView1.Columns.Add("columnO", "O");
+            dataGridView1.Columns.Add("columnP", "P");
+            dataGridView1.Columns.Add("columnQ", "Q");
+            dataGridView1.Columns.Add("columnR", "R");
+            dataGridView1.Columns.Add("columnS", "S");
+            dataGridView1.Columns.Add("columnT", "T");
+            dataGridView1.Columns.Add("columnU", "U");
+            dataGridView1.Columns.Add("columnV", "V");
+            dataGridView1.Columns.Add("columnW", "W");
+            dataGridView1.Columns.Add("columnX", "X");
+            dataGridView1.Columns.Add("columnY", "Y");
+            dataGridView1.Columns.Add("columnZ", "Z");
+
+            for (int i = 1; i <= 50; i++)
+            {
+                dataGridView1.Rows.Add();
+                dataGridView1.Rows[i-1].HeaderCell.Value = i.ToString();
+            }
         }
 
         
