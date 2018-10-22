@@ -33,7 +33,20 @@ namespace SpreadsheetEngine
             {
                 leftNode = null;
                 rightNode = null;
+                if(newValue == "+" || newValue == "-")
+                {
+                    precedence = 2;
+                }
+                else if (newValue == "*" || newValue == "/")
+                {
+                    precedence = 3;
+                }
+                else
+                {
+                    precedence = 1; //parentheses
+                }
             }
+            public int precedence { get; set; }
             public Node leftNode { get; set; }
             public Node rightNode { get; set; }
         }
@@ -136,8 +149,108 @@ namespace SpreadsheetEngine
                 }
             }
         }
+
+        private bool isOperator(string x)
+        {
+            if (x.Equals("+") || x.Equals("-") || x.Equals("/") || x.Equals("*") || x.Equals("(") || x.Equals(")"))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private bool isVariable(string x)
+        {
+            if (isOperator(x) == false && double.TryParse(x,out double result) == false)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private bool isConstant(string x)
+        {
+            if(double.TryParse(x, out double result))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private List<Node> postFixExp()
+        {
+            List<Node> postfix = new List<Node>();
+            Stack<OperatorNode> operators = new Stack<OperatorNode>();
+
+            string pr = "";
+            foreach (char character in this.Expression)
+            {
+                if (!isOperator(character.ToString()))
+                {
+                    pr += character;
+                }
+                else if (isOperator(character.ToString()))
+                {
+                    if (pr.Length != 0)
+                    {
+                        if (isVariable(pr))
+                        {
+                            vars.Add(pr, 0);
+                            VariableNode newNode = new VariableNode(pr);
+                            postfix.Add(newNode);
+                        }
+                        else if (isConstant(pr))
+                        {
+                            ConstantNode newNode = new ConstantNode(pr);
+                            postfix.Add(newNode);
+                        }
+
+                    }
+
+                    OperatorNode newOperator = new OperatorNode(character.ToString());
+                    if (newOperator.Value == "(")//parentheses
+                    {
+                        operators.Push(newOperator);
+                    }
+                    else if (newOperator.Value == ")")
+                    {
+                        while (operators.Peek().Value != "(")
+                        {
+                            postfix.Add(operators.Pop());
+                        }
+                        operators.Pop();
+                    }
+
+                    else if (operators.Count != 0 && (newOperator.precedence <= operators.Peek().precedence && newOperator.precedence != 1))
+                    //while newest operator precedence is less than or equal to top of stack and not a "("
+                    {
+                        while (newOperator.precedence <= operators.Peek().precedence && newOperator.precedence != 1)
+                        {
+                            postfix.Add(operators.Pop());
+                        }
+                    }
+
+                    else
+                    {
+                        operators.Push(newOperator);
+                    }
+
+                    pr = "";
+                }
+
+            }
+
+            while (operators.Count != 0)
+            {
+                postfix.Add(operators.Pop());
+            }
+
+            return postfix;
+        }
+
         private void makeTree()
         {
+            /*
             String[] arguments = Regex.Split(this.Expression, @"([-+/*])");
             List<string> variables = new List<string>(); //List of variables
             List<string> operators = new List<string>(); //List of operators
@@ -234,9 +347,12 @@ namespace SpreadsheetEngine
                     newOperator.leftNode = this.head;
                     newOperator.rightNode = nodeToAdd;
                     this.head = newOperator;
-
+                    
                 }
             }
+            */
+            List<Node> postfix = postFixExp();
+            Console.WriteLine("Stop");
         }
         
         public ExpTree(string exprssion)
