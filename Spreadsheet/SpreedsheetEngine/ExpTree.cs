@@ -224,10 +224,11 @@ namespace SpreadsheetEngine
                     else if (operators.Count != 0 && (newOperator.precedence <= operators.Peek().precedence && newOperator.precedence != 1))
                     //while newest operator precedence is less than or equal to top of stack and not a "("
                     {
-                        while (newOperator.precedence <= operators.Peek().precedence && newOperator.precedence != 1)
+                        while (operators.Count != 0 && (newOperator.precedence <= operators.Peek().precedence && newOperator.precedence != 1))
                         {
                             postfix.Add(operators.Pop());
                         }
+                        operators.Push(newOperator);
                     }
 
                     else
@@ -238,6 +239,20 @@ namespace SpreadsheetEngine
                     pr = "";
                 }
 
+            }
+            if(pr.Length != 0)
+            {
+                if (isVariable(pr))
+                {
+                    vars.Add(pr, 0);
+                    VariableNode newNode = new VariableNode(pr);
+                    postfix.Add(newNode);
+                }
+                else if (isConstant(pr))
+                {
+                    ConstantNode newNode = new ConstantNode(pr);
+                    postfix.Add(newNode);
+                }
             }
 
             while (operators.Count != 0)
@@ -352,7 +367,25 @@ namespace SpreadsheetEngine
             }
             */
             List<Node> postfix = postFixExp();
-            Console.WriteLine("Stop");
+            Stack<Node> stack = new Stack<Node>();
+            Node rightNode, leftNode;
+            foreach (Node node in postfix)
+            {
+                if(node is VariableNode || node is ConstantNode)
+                {
+                    stack.Push(node);
+                }
+
+                if (node is OperatorNode)
+                {
+                    rightNode = stack.Pop();
+                    leftNode = stack.Pop();
+                    (node as OperatorNode).rightNode = rightNode;
+                    (node as OperatorNode).leftNode = leftNode;
+                    stack.Push(node);
+                }
+            }
+            this.head = stack.Pop();
         }
         
         public ExpTree(string exprssion)

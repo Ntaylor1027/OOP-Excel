@@ -19,27 +19,10 @@ namespace ConsoleExpTree
             Console.WriteLine("  4 = Quit\n");
         }
 
-        public static bool isOperator(string x)
-        {
-            if (x.Equals('+') || x.Equals('-') || x.Equals('/') || x.Equals('*') || x.Equals('(') || x.Equals(')'))
-            {
-                return true;
-            }
-            return false;
-        }
-
-        public static bool isVariable(string x)
-        {
-            if (isOperator(x) == false && double.TryParse(x.ToString(), out double result) == false)
-            {
-                return true;
-            }
-            return false;
-        }
 
         static void Main(string[] args)
         {
-            /*
+            
             ExpTree expTree = new ExpTree("A1+B1+C1");
             string option = "0";
             do
@@ -75,14 +58,8 @@ namespace ConsoleExpTree
                 }
 
             } while (option != "4");
-            */
-
-            ExpTree testtree = new ExpTree("(3+2)-(4*(2-1))");
-            Console.ReadKey();
-
             
-            
-
+                      
         }
     }
 }
