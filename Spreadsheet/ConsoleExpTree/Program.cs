@@ -52,7 +52,6 @@ namespace ConsoleExpTree
                     case "3":
                         Console.WriteLine(expTree.Eval());
                         break;
-
                     default:
                         break;
                 }
