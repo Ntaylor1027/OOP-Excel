@@ -41,6 +41,10 @@ namespace SpreadsheetEngine
 
         protected internal void setValue(string newValue)
         {
+            if (newValue is null || newValue == "")
+            {
+                val = "";
+            }
             if(val != newValue)
             {
                 val = newValue;

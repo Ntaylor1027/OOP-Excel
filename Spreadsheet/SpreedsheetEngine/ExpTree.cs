@@ -9,7 +9,7 @@ namespace SpreadsheetEngine
 {
     public class ExpTree
     {
-        Dictionary<string, double> vars = new Dictionary<string, double>();
+        public Dictionary<string, double> vars = new Dictionary<string, double>();
         public string Expression;
         public Node head;
 
@@ -81,6 +81,48 @@ namespace SpreadsheetEngine
             }
         }
         
+        private bool checkKeys()
+        {
+            
+            foreach(KeyValuePair<string, double> entry in vars)
+            {
+                
+                if(entry.Key.Length > 3)
+                {
+                    return false;
+                }
+                if (Convert.ToInt32(entry.Key[0]) < 65 || Convert.ToInt32(entry.Key[0])>90)
+                {
+                    return false;
+                }
+                else if(Int32.TryParse(entry.Key.Substring(1), out int number) == false)
+                {
+                    return false;
+                }
+                else if (Int32.TryParse(entry.Key.Substring(1), out number) == true)
+                {
+                    if(number > 50 || number < 1)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+            
+        }
+
+        public string EvalString()
+        {
+            if(checkKeys() is false)
+            {
+                return "#REF";
+            }
+            else
+            {
+                return Eval().ToString();
+            }
+        }
+
         public double Eval()
         {
             return Eval(head);
@@ -394,6 +436,32 @@ namespace SpreadsheetEngine
             makeTree();
             
            
+        }
+
+        private void setDict(Cell[,] sheetCells)
+        {
+            for(int i = 0; i < sheetCells.GetLength(0); i++)
+            {
+                for(int j = 0; j < sheetCells.GetLength(1); j++)
+                {
+                    Cell temp = sheetCells[i, j];
+                    if(Double.TryParse(temp.Value, out double result))
+                    {
+                        string row = (i+1).ToString();
+                        string column = Convert.ToChar(j + 65).ToString();
+                        SetVar(column+row, result);
+                    }
+                }
+            }
+        }
+
+        public ExpTree(string exprssion, Cell[,] sheetCells)
+        {
+            Expression = exprssion;
+            makeTree();
+
+            setDict(sheetCells);
+
         }
     }
 }

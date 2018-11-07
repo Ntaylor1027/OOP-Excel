@@ -15,6 +15,7 @@ namespace Spreedsheet
 {
     public partial class Form1 : Form
     {
+        Cell cellSelected;
         private Spreadsheet sheet;
         //public event PropertyChangedEventHandler Sheet_CellPropertyChanged;
 
@@ -110,6 +111,53 @@ namespace Spreedsheet
         private void button1_Click(object sender, EventArgs e)
         {
             demo();
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            //MessageBox.Show(textBox1.Text.ToString());
+        }
+
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            var item = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
+            cellSelected = sheet.getCell(e.RowIndex, e.ColumnIndex);
+            if (sheet.getCell(e.RowIndex, e.ColumnIndex).Value != null)
+            {
+                textBox1.Text = sheet.getCell(e.RowIndex, e.ColumnIndex).Text.ToString();
+            }
+            else
+            {
+                textBox1.Text = "";
+            }
+        }
+
+        private void textBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Return)
+            {
+                cellSelected.Text = textBox1.Text;
+                evaluateAllCells();
+                //MessageBox.Show(sheet.getCell(dataGridView1.CurrentCell.RowIndex, dataGridView1.CurrentCell.ColumnIndex).Text);
+                //sheet.getCell(dataGridView1.CurrentCell.RowIndex, dataGridView1.CurrentCell.ColumnIndex).Text =
+            }
+        }
+
+        private void evaluateAllCells()
+        {
+            string temp = "";
+            Cell cellTouched;
+            for (int i = 0; i < sheet.RowCount;i++)
+            {
+                for(int j = 0; j < sheet.ColumnCount; j++)
+                {
+                    cellTouched = sheet.getCell(i, j);
+                    temp = cellTouched.Text;
+                    cellTouched.Text = "";
+                    cellTouched.Text = temp;
+                    
+                }
+            }
         }
     }
 }

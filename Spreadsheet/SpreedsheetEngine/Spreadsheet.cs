@@ -60,7 +60,11 @@ namespace SpreadsheetEngine
             Cell cell = sender as Cell;
             if (e.PropertyName == "Text")
             {
-                if (cell.Text[0] != '=')
+                if(cell.Text == null || cell.Text == "")
+                {
+                    cell.setValue("");
+                }
+                else if (cell.Text[0] != '=')
                 {
                     cell.setValue(cell.Text);
                 }
@@ -79,11 +83,45 @@ namespace SpreadsheetEngine
 
         private string calcValue(string text)
         {
-            int row = Convert.ToInt32(text.Substring(2)) -1;
-            int column = Convert.ToInt32(text[1]) - 65; //Convert character to ascii then subtract 65 to get int of column
-            SpreadSheetCell copyCell = (SpreadSheetCell)getCell(row, column); 
-            return copyCell.Value;
-
+            char[] operators = { '+', '/', '*', '-' };
+            if (text.IndexOfAny(operators) != -1)
+            {
+                ExpTree expression = new ExpTree(text.Substring(1), sheetCells);
+                /*if (expression.vars.Count != 0)
+                {
+                    foreach (KeyValuePair<string, double> cellName in expression.vars)
+                    {
+                        int row = Convert.ToInt32(cellName.Key.Substring(1)) - 1;
+                        int column = Convert.ToInt32(cellName.Key[0]) - 65;
+                        if (row < 0 || row > 50 || column < 0 || column > 25) { return "#REF"; }
+                        SpreadSheetCell copyCell = (SpreadSheetCell)getCell(row, column);
+                        expression.SetVar(cellName.Key, Convert.ToDouble(copyCell.Value));
+                    }
+                }*/
+                return expression.EvalString();
+            }
+            else
+            {
+                if (text.Length > 3)
+                {
+                    return "#REF";
+                }
+                if(Int32.TryParse(text.Substring(2), out int row) == false)
+                {
+                    return "#REF";
+                }
+                 row -= 1;
+                int column = Convert.ToInt32(text[1]) - 65; //Convert character to ascii then subtract 65 to get int of column
+                if (row < 0 || row > rowCount || column < 0 || column > columnCount)
+                {
+                    return "#REF";
+                }
+                else
+                {
+                    SpreadSheetCell copyCell = (SpreadSheetCell)getCell(row, column);
+                    return copyCell.Value;
+                }
+            }
         }
 
         public Cell getCell(int row, int column)
@@ -103,5 +141,6 @@ namespace SpreadsheetEngine
             }
         }
         */
+        
     }
 }
