@@ -115,7 +115,7 @@ namespace SpreadsheetEngine
         {
             if(checkKeys() is false)
             {
-                return "#REF";
+                return "#REF!";
             }
             else
             {

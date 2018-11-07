@@ -104,17 +104,17 @@ namespace SpreadsheetEngine
             {
                 if (text.Length > 3)
                 {
-                    return "#REF";
+                    return "#REF!";
                 }
                 if(Int32.TryParse(text.Substring(2), out int row) == false)
                 {
-                    return "#REF";
+                    return "#REF!";
                 }
                  row -= 1;
                 int column = Convert.ToInt32(text[1]) - 65; //Convert character to ascii then subtract 65 to get int of column
                 if (row < 0 || row > rowCount || column < 0 || column > columnCount)
                 {
-                    return "#REF";
+                    return "#REF!";
                 }
                 else
                 {
