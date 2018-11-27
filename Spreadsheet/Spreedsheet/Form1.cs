@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using SpreadsheetEngine;
-
+using System.IO;
 
 namespace Spreedsheet
 {
@@ -158,6 +158,42 @@ namespace Spreedsheet
                     
                 }
             }
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            XMLparser parser = new XMLparser();
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Title = "Select a file";
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                using (Stream sw = sfd.OpenFile())
+                {
+                    parser.Save(sw, sheet, sfd.FileName);
+                    
+                }
+            }
+        }
+
+        private void loadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            XMLparser parser = new XMLparser();
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Title = "Select a file";
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                using (Stream sw = ofd.OpenFile())
+                {
+                    parser.Load(sw,ref sheet);
+                    sw.Close();
+                }
+            }
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form2 form2 = new Form2();
+            form2.Show();
         }
     }
 }

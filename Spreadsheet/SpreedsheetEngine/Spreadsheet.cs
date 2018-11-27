@@ -129,6 +129,17 @@ namespace SpreadsheetEngine
             return sheetCells[row,column];
         }
 
+        public void clear()
+        {
+            for (int i = 0; i < rowCount; i++)
+            {
+                for (int j = 0; j < columnCount; j++)
+                {
+                    sheetCells[i, j].Text = "";
+                }
+            }
+        }
+
         // public event PropertyChangedEventHandler CellPropertyChanged;
 
         /*
